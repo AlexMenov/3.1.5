@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="https://www.thymeleaf.org"
+>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="https://getbootstrap.com/docs/4.0/assets/img/favicons/favicon.ico">
-    <title>Admin panel</title>
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
+    <meta name="_csrf_token" th:content="${_csrf.getToken()}">
+    <meta name="_csrf_header" th:content="${_csrf.getHeaderName()}">
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <title>Info Panel</title>
+    <link href="https://getbootstrap.com/docs/4.0/assets/img/favicons/favicon.ico" rel="icon">
+    <link href="https://getbootstrap.com/docs/4.0/examples/sign-in/" rel="canonical">
     <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/4.0/examples/sign-in/signin.css" rel="stylesheet">
-    <script src="https://getbootstrap.com/docs/5.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://getbootstrap.com/docs/5.0/examples/sidebars/sidebars.js"></script>
-    <script defer th:src="@{/js/admin.js}"></script>
+    <script defer src="https://getbootstrap.com/docs/5.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://getbootstrap.com/docs/5.0/examples/sidebars/sidebars.js"></script>
+    <script defer th:if="${isAdmin}" th:src="@{/js/admin/admin.js}" type="module"></script>
+    <script defer th:src="@{/js/toggleContainers.js}"></script>
 </head>
 <body style="display: block; padding: 0; scroll-behavior: smooth">
 <div class="alert alert-primary" role="alert" style="display:flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 0">
@@ -85,25 +89,14 @@
                             <th scope="col">Delete</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:id="${'parent-' + user.getId()}" th:each="user: ${users}">
-                            <td th:text="${user.getId()}" class="userid"></td>
-                            <td th:text="${user.getUsername()}" class="username">Mark</td>
-                            <td th:text="${user.getLastName()}" class="userlastname">Otto</td>
-                            <td th:text="${user.getAge()}" class="userage">@mdo</td>
-                            <td th:text="${user.getEmail()}" class="useremail">@mdo</td>
-                            <td>
-                                <span style="display: block" th:each="role: ${user.getRoles()}" th:text="${role.getRole()}"></span>
-                            </td>
-                            <td><button type="button" class="btn btn-info" th:name="${'parent-' + user.getId()}" data-toggle="modal" data-action="edit">Edit</button></td>
-                            <td><button type="button" class="btn btn-danger" th:name="${'parent-' + user.getId()}" data-toggle="modal" data-action="delete">Delete</button></td>
-                        </tr>
-                        </tbody>
                     </table>
                 </div>
                 <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" style="display:flex; flex-direction: column; align-items: center; justify-content: center; width: 100%">
                     <h3 class="h3" style="align-self: flex-start">Add new user</h3>
-                    <form style="min-width: 550px;" method="post" th:action="@{/admin/register}">
+                    <form style="min-width: 550px;" method="post" action="create" class="api-action" data-action="create" a>
+                        <div class="form-group" hidden="hidden">
+                            <input name="id" type="text" class="form-control" value="0"/>
+                        </div>
                         <div class="form-group">
                             <label for="user-name">First name</label>
                             <input name="username" type="text" class="form-control" id="user-name" placeholder="User name" required>
@@ -131,7 +124,7 @@
                                 <option selected value="USER">USER</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary">Add new user</button>
+                        <button type="submit" class="btn btn-primary api-action">Add new user</button>
                     </form>
                 </div>
             </div>
@@ -145,7 +138,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form style="width: 100%;" method="post" th:action="@{/admin/}">
+                            <form style="width: 100%;" method="post" action="/" class="api-action">
                                 <div class="form-group">
                                     <label for="userid">Id</label>
                                     <input name="id" id="userid" type="text" class="form-control editable" placeholder="id" required>
@@ -172,19 +165,18 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleFormControlSelect2">Role
-                                    <select name="roles" multiple class="form-control" required>
-                                        <option value="ADMIN">ADMIN</option>
-                                        <option selected value="USER">USER</option>
-                                    </select>
+                                        <select name="roles" multiple class="form-control" required>
+                                            <option value="ADMIN">ADMIN</option>
+                                            <option selected value="USER">USER</option>
+                                        </select>
                                     </label>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">CLOSE</button>
-                                    <button type="submit" class="btn btn-primary">Add new user</button>
+                                    <button type="submit" class="btn btn-primary api-action">Action</button>
                                 </div>
                             </form>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -225,3 +217,4 @@
 </div>
 </body>
 </html>
+

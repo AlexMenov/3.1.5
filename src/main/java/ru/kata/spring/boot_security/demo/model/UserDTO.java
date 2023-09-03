@@ -1,8 +1,10 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.extern.jackson.Jacksonized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.kata.spring.boot_security.demo.dao.RoleRepository;
@@ -12,15 +14,16 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Getter
-@Setter
+@Data
 @Slf4j
-public class UserFrame {
-    @NotNull
+@Builder
+@Jacksonized
+@AllArgsConstructor
+@JsonAutoDetect
+public class UserDTO {
     private Long id;
     @NotNull
     @Size(min = 3)
@@ -44,7 +47,8 @@ public class UserFrame {
                 age,
                 email,
                 encoder.encode(getPassword()),
-                toRoles(roleRepository.findAll()));
+                toRoles(roleRepository.findAll())
+        );
     }
 
     private Collection<Role> toRoles(Iterable<Role> allRoles) {

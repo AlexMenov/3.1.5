@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -56,9 +57,10 @@ public class User implements UserDetails, Serializable {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns =
-            @JoinColumn(name = "users_id", referencedColumnName = "id"),
+            @JoinColumn(name = "users_id"),
             inverseJoinColumns =
-            @JoinColumn(name = "role_id", referencedColumnName = "id"))
+            @JoinColumn(name = "role_id"))
+    @JsonBackReference
     private Collection<Role> roles;
 
     public Collection<String> getUserRoles() {
@@ -68,10 +70,6 @@ public class User implements UserDetails, Serializable {
                 .sorted(Comparator.comparing(Role::getRole))
                 .map(role -> role.getRole().toLowerCase())
                 .collect(Collectors.toList());
-    }
-
-    public boolean isAdmin() {
-        return getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
     }
 
     @Override
