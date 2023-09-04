@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 
 @Entity
 @Getter
@@ -26,11 +25,6 @@ public class Role implements GrantedAuthority {
     @Column
     @NotNull
     private String role;
-
-    @Column
-    @ManyToMany(mappedBy = "roles")
-    @JsonManagedReference
-    private Collection<User> users;
 
     @Override
     public String getAuthority() {

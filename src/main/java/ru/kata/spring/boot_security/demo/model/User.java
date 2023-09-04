@@ -49,7 +49,7 @@ public class User implements UserDetails, Serializable {
     private String password;
 
     @NotNull
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns =
             @JoinColumn(name = "users_id"),

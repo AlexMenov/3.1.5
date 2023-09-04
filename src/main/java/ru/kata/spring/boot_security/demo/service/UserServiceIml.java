@@ -35,12 +35,8 @@ public class UserServiceIml implements UserService, UserDetailsService {
 
     @Override
     public User deleteUser(User userToDelete) {
-        Optional<User> user = userRepo.findById(userToDelete.getId());
-        if (user.isPresent()) {
-            user.get().setRoles(new ArrayList<>());
-            userRepo.deleteById(user.get().getId());
-        }
-        return user.orElseGet(user::orElseThrow);
+        userRepo.deleteById(userToDelete.getId());
+        return userToDelete;
     }
 
     @Override
