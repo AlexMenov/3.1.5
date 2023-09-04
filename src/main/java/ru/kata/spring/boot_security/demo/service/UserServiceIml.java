@@ -34,11 +34,11 @@ public class UserServiceIml implements UserService, UserDetailsService {
     }
 
     @Override
-    public User deleteUser(UserDTO userDTO) {
-        Optional<User> user = userRepo.findById(userDTO.getId());
+    public User deleteUser(User userToDelete) {
+        Optional<User> user = userRepo.findById(userToDelete.getId());
         if (user.isPresent()) {
             user.get().setRoles(new ArrayList<>());
-            userRepo.deleteById(userDTO.getId());
+            userRepo.deleteById(user.get().getId());
         }
         return user.orElseGet(user::orElseThrow);
     }

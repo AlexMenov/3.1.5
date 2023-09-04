@@ -7,9 +7,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.dao.RoleRepository;
+import ru.kata.spring.boot_security.demo.mapper.UserMapper;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.model.UserDTO;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Slf4j
@@ -20,8 +21,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 public class MainRestController {
     private final UserService userService;
     private final PasswordEncoder encoder;
-    private final RoleRepository roleRepository;
-
+    private final RoleService roleService;
     @PostMapping("/users")
     public ResponseEntity<Iterable<User>> users() {
         log.info("Request for users");
@@ -32,12 +32,12 @@ public class MainRestController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<User> delete(@RequestBody UserDTO userDTO) {
         log.info("userDTO: {}", userDTO);
-        return ResponseEntity.ok(userService.deleteUser(userDTO));
+        return ResponseEntity.ok(userService.deleteUser(UserMapper.toUser(userDTO, encoder, roleService.findAllUsers())));
     }
 
     @PostMapping(path = {"/create", "/edit"})
     public ResponseEntity<User> create(@RequestBody UserDTO userDTO) {
         log.info("userDTO: {}", userDTO);
-        return ResponseEntity.ok(userService.updateUser(userDTO.toUser(encoder, roleRepository)));
+        return ResponseEntity.ok(userService.updateUser(UserMapper.toUser(userDTO, encoder, roleService.findAllUsers())));
     }
 }

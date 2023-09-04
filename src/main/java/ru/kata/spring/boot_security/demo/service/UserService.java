@@ -12,5 +12,5 @@ public interface UserService {
 
     User updateUser(User user);
 
-    User deleteUser(UserDTO userDTO);
+    User deleteUser(User user);
 }

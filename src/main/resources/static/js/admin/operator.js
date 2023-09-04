@@ -19,7 +19,7 @@ const sender = async (e, action) => {
         if (result.id) {
             alert("пользователь добавлен/обновлен/удален");
             hideModal();
-            return result; // Return the result in the success case
+            return result;
         }
     } catch (error) {
         console.error("Error:", error);

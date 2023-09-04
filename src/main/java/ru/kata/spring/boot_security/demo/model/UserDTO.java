@@ -38,22 +38,4 @@ public class UserDTO {
     private String password;
     @NotNull
     private String[] roles;
-
-    public User toUser(PasswordEncoder encoder, RoleRepository roleRepository) {
-        return new User(
-                id,
-                username,
-                lastName,
-                age,
-                email,
-                encoder.encode(getPassword()),
-                toRoles(roleRepository.findAll())
-        );
-    }
-
-    private Collection<Role> toRoles(Iterable<Role> allRoles) {
-        return StreamSupport.stream(allRoles.spliterator(), false)
-                .filter(role -> Arrays.asList(roles).contains(role.getRole()))
-                .collect(Collectors.toList());
-    }
 }
